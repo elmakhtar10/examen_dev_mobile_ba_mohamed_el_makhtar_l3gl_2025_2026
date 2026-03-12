@@ -7,6 +7,8 @@ import 'package:sunu_task/screens/auth/login_screen.dart';
 import 'package:sunu_task/screens/home/home_screen.dart';
 import 'package:sunu_task/services/storage_service.dart';
 
+import '../../providers/app_provider.dart';
+
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
