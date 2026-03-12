@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_colors.dart';
 import 'package:sunu_task/providers/app_provider.dart';
+import 'package:sunu_task/providers/project_provider.dart';
+import 'package:sunu_task/providers/auth_provider.dart';
 
 class DashboardTab extends StatelessWidget {
   const DashboardTab({super.key});
 
-  // Logique du message de bienvenue selon l'heure
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) return "Bonjour";
@@ -16,52 +17,58 @@ class DashboardTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appProvider = context.read<AppProvider>();
+    // On écoute les trois providers nécessaires
+    final appProvider = context.watch<AppProvider>();
+    final projectProvider = context.watch<ProjectProvider>();
+    final authProvider = context.read<AuthProvider>();
 
-    // Utilisation de ListenableBuilder pour reconstruire l'UI
-    return ListenableBuilder(
-      listenable: appProvider,
-      builder: (context, child) {
-        return RefreshIndicator(
-          onRefresh: () => appProvider.init(),
-          color: AppColors.primary,
-          child: ListView(
-            padding: const EdgeInsets.all(16.0),
-            children: [
-              // Section Bienvenue
-              _buildHeader(),
-
-              const SizedBox(height: 24),
-
-              // Section Statistiques
-              appProvider.isLoading
-                  ? const Center(child: LinearProgressIndicator())
-                  : _buildStatsGrid(),
-
-              const SizedBox(height: 24),
-
-              // Section Projets Récents
-              _buildRecentProjectsHeader(),
-
-              // Liste simulée pour l'instant
-              _buildRecentProjectItem("Refonte Site Web", "Il y a 2h"),
-              _buildRecentProjectItem("App Mobile SunuTask", "Hier"),
-              _buildRecentProjectItem("Base de données L3GL", "Il y a 3 jours"),
-            ],
-          ),
-        );
+    return RefreshIndicator(
+      onRefresh: () async {
+        await appProvider.init();
+        if (authProvider.currentUser != null) {
+          await projectProvider.loadProjects(authProvider.currentUser!.id);
+        }
       },
+      color: AppColors.primary,
+      child: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          _buildHeader(authProvider.currentUser?.name ?? "l'ami"),
+
+          const SizedBox(height: 24),
+
+          // Section Statistiques avec les VRAIES données
+          appProvider.isLoading || projectProvider.isLoading
+              ? const Center(child: LinearProgressIndicator())
+              : _buildStatsGrid(projectProvider),
+
+          const SizedBox(height: 24),
+
+          _buildRecentProjectsHeader(),
+
+          // Affichage des 3 derniers projets réels s'ils existent
+          if (projectProvider.projects.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text("Aucun projet récent", textAlign: TextAlign.center),
+            )
+          else
+            ...projectProvider.projects.reversed.take(3).map((project) {
+              return _buildRecentProjectItem(project.title, "Projet");
+            }),
+        ],
+      ),
     );
   }
 
-  // --- COMPOSANTS DE L'INTERFACE (Méthodes privées) ---
+  // --- COMPOSANTS DE L'INTERFACE ---
 
-  Widget _buildHeader() {
+  Widget _buildHeader(String name) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "${_getGreeting()}, l'ami !",
+          "${_getGreeting()}, $name !",
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -77,7 +84,12 @@ class DashboardTab extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsGrid() {
+  Widget _buildStatsGrid(ProjectProvider provider) {
+    // Calcul des statistiques réelles
+    int totalProjects = provider.projectCount;
+    int completedProjects = provider.projects.where((p) => p.isCompleted).length;
+    int inProgress = totalProjects - completedProjects;
+
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -86,10 +98,10 @@ class DashboardTab extends StatelessWidget {
       mainAxisSpacing: 12,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard("Projets", "12", Icons.folder, Colors.blue),
-        _buildStatCard("À faire", "5", Icons.assignment, Colors.orange),
-        _buildStatCard("En cours", "3", Icons.pending, Colors.purple),
-        _buildStatCard("Terminés", "24", Icons.check_circle, Colors.green),
+        _buildStatCard("Projets", "$totalProjects", Icons.folder, Colors.blue),
+        _buildStatCard("À faire", "0", Icons.assignment, Colors.orange), // Sera lié aux tâches
+        _buildStatCard("En cours", "$inProgress", Icons.pending, Colors.purple),
+        _buildStatCard("Terminés", "$completedProjects", Icons.check_circle, Colors.green),
       ],
     );
   }
@@ -126,7 +138,7 @@ class DashboardTab extends StatelessWidget {
     );
   }
 
-  Widget _buildRecentProjectItem(String name, String time) {
+  Widget _buildRecentProjectItem(String name, String type) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       leading: Container(
@@ -138,11 +150,8 @@ class DashboardTab extends StatelessWidget {
         child: const Icon(Icons.folder, color: AppColors.primary),
       ),
       title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
-      subtitle: Text(time),
+      subtitle: Text(type),
       trailing: const Icon(Icons.chevron_right),
-      onTap: () {
-        // Navigation vers le détail du projet plus tard
-      },
     );
   }
 }
