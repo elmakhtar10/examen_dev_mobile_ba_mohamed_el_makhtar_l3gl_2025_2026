@@ -75,8 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
         children:  [
           DashboardTab(),
           ProjectsTab(),
-          // Center(child: Text('Contenu Dashboard')),
-          // Center(child: Text('Contenu Projets')),
           Center(child: Text('Contenu Tâches')),
           ProfileTab(),
         ],

@@ -2,15 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_colors.dart';
 import 'package:sunu_task/providers/auth_provider.dart';
+import 'package:sunu_task/providers/project_provider.dart';
 import 'package:sunu_task/screens/auth/login_screen.dart';
 
 class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});
 
+  // Fonction pour transformer une date en "12 Mars 2026"
+  String _formatDate(DateTime? date) {
+    if (date == null) return "Date inconnue";
+
+    // Liste des mois en français
+    const months = [
+      'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+      'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+    ];
+
+    return "${date.day} ${months[date.month - 1]} ${date.year}";
+  }
+
   @override
   Widget build(BuildContext context) {
-
     final authProvider = context.read<AuthProvider>();
+    final projectProvider = context.watch<ProjectProvider>();
     final user = authProvider.currentUser;
 
     return SingleChildScrollView(
@@ -19,16 +33,19 @@ class ProfileTab extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
 
-          // AVATAR ET INFOS DE BASE
+          // 1. HEADER : AVATAR
           CircleAvatar(
             radius: 50,
             backgroundColor: AppColors.primary,
             child: Text(
-              user?.name.substring(0, 1).toUpperCase() ?? "U",
+              user?.name.isNotEmpty == true ? user!.name.substring(0, 1).toUpperCase() : "U",
               style: const TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
+
           const SizedBox(height: 16),
+
+          // NOM ET EMAIL
           Text(
             user?.name ?? "Utilisateur",
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -37,25 +54,33 @@ class ProfileTab extends StatelessWidget {
             user?.email ?? "email@exemple.com",
             style: const TextStyle(color: Colors.grey),
           ),
-          const SizedBox(height: 8),
+
+          const SizedBox(height: 12),
+
+          // DATE D'INSCRIPTION
           Chip(
-            label: const Text("Inscrit depuis le 12 Mars 2026"),
+            label: Text(
+              "Inscrit depuis le ${_formatDate(user?.createdAt ?? DateTime.now())}",
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
             backgroundColor: AppColors.primary.withAlpha(30),
+            side: BorderSide.none,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
 
           const SizedBox(height: 30),
 
-          // STATISTIQUES PERSONNELLES
+          // 4. STATISTIQUES RÉELLES
           Row(
             children: [
-              _buildStatItem("Projets", "12", Icons.folder_shared),
-              _buildStatItem("Tâches", "45", Icons.check_circle_outline),
+              _buildStatItem("Projets", "${projectProvider.projectCount}", Icons.folder_shared),
+              _buildStatItem("Tâches", "0", Icons.check_circle_outline),
             ],
           ),
 
           const SizedBox(height: 40),
 
-          // BOUTON DE DÉCONNEXION
+          // BOUTON DÉCONNEXION
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
@@ -83,7 +108,6 @@ class ProfileTab extends StatelessWidget {
     );
   }
 
-  // Petit widget interne pour les stats
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Expanded(
       child: Card(
