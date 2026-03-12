@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Bouton Connexion
                 CustomButton(
                   text: AppStrings.login,
-                  // isLoading: authProvider.isLoading,
+                  isLoading: authProvider.isLoading,
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       bool success = await context.read<AuthProvider>().login(

@@ -1,12 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/screens/home/home_screen.dart';
 import 'package:sunu_task/screens/onboarding/onboarding_screen.dart';
 import 'package:sunu_task/services/storage_service.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../providers/app_provider.dart';
+import '../../providers/auth_provider.dart';
 import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -56,11 +59,18 @@ class _SplashScreenState extends State<SplashScreen> {
     _timer = Timer( Duration(seconds: 3), _navigateToNextScreen);
   }
 
-  void _navigateToNextScreen() {
+  void _navigateToNextScreen() async {
     if (!mounted) return;
 
-    final bool onboardingComplete = StorageService.instance.isOnboardingComplete;
-    final bool isAuthenticated = StorageService.instance.getAuthenticatedUser() != null;
+    final appProvider = context.read<AppProvider>();
+    final authProvider = context.read<AuthProvider>();
+    // Cela évite de naviguer alors que les données sont encore à 'false' par défaut
+    if (!appProvider.isInitialized) {
+      await appProvider.init();
+    }
+
+    final bool onboardingComplete = appProvider.isOnboardingComplete;
+    final bool isAuthenticated = authProvider.isAuthenticated;
 
     // Déterminer la destination
     Widget nextScreen;
@@ -73,20 +83,24 @@ class _SplashScreenState extends State<SplashScreen> {
       nextScreen = const HomeScreen();
     }
 
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 300),
-      ),
-    );
+    // Navigation avec animation
+    if (mounted) {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          transitionDuration: const Duration(milliseconds: 300),
+        ),
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
