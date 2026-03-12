@@ -7,6 +7,7 @@ import 'package:sunu_task/screens/onboarding/onboarding_screen.dart';
 import 'package:sunu_task/services/storage_service.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -56,33 +57,34 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _navigateToNextScreen() {
-    if(!mounted) return;
+    if (!mounted) return;
+
     final bool onboardingComplete = StorageService.instance.isOnboardingComplete;
+    final bool isAuthenticated = StorageService.instance.getAuthenticatedUser() != null;
 
-    /*Navigator.pushReplacement(context,
-      MaterialPageRoute<void>(
-      builder: (context) => onboardingComplete
-          ? const HomeScreen()
-          : const OnboardingScreen(),
-    ),
-    );*/
+    // Déterminer la destination
+    Widget nextScreen;
 
-    // Navigation avec animation
+    if (!onboardingComplete) {
+      nextScreen = const OnboardingScreen();
+    } else if (!isAuthenticated) {
+      nextScreen = const LoginScreen();
+    } else {
+      nextScreen = const HomeScreen();
+    }
+
     Navigator.pushReplacement(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-          onboardingComplete
-              ? const HomeScreen()
-              : const OnboardingScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-                opacity: animation,
-              child: child,
-            );
-          },
-          transitionDuration: Duration(milliseconds: 300)
-        )
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
     );
   }
   @override
@@ -123,15 +125,15 @@ class _SplashScreenState extends State<SplashScreen> {
           width: 124,
           height: 124,
           decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withAlpha(180),
-                blurRadius: 20,
-                offset: Offset(0, 10)
-              )
-            ]
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.primary.withAlpha(180),
+                    blurRadius: 20,
+                    offset: Offset(0, 10)
+                )
+              ]
             //shape: BoxShape.circle
           ),
           child: Icon(
@@ -154,7 +156,7 @@ class _SplashScreenState extends State<SplashScreen> {
             fontSize: 32,
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
-          letterSpacing: 1.2
+            letterSpacing: 1.2
         ),
       ),
     );
