@@ -14,7 +14,7 @@ class AppStrings {
   static const String appName = 'SunuTask';
   static const String appSlogan = 'Gérez vos projets efficacement';
 
- // ============== Onboarding ==============
+  // ============== Onboarding ==============
 
   static const String onboardingTitle1 = 'Bienvenue sur $appName';
   static const String onboardingDesc1 =
@@ -56,10 +56,12 @@ class AppStrings {
   static const String email = 'Email';
   static const String password = 'Mot de passe';
   static const String confirmPassword = 'Confirmer le mot de passe';
-  static const String name = 'Nom';
+  static const String name = 'Nom Complet';
   static const String forgotPassword = 'Mot de passe oublie ?';
-  static const String noAccount = 'Pas encore de compte ?';
-  static const String haveAccount = 'Deja un compte ?';
+  static const String noAccount = 'Pas de compte? S\'inscrire';
+  static const String haveAccount = 'Déjà un compte ? Se connecter';
+  static const String invalidInput = 'Email ou mot de passe incorrect';
+  static const String createAccount = 'Créer un compte';
 
   // ============== Projets ==============
 
@@ -126,6 +128,8 @@ class AppStrings {
   static const String emailInvalid = 'Email invalide';
   static const String passwordTooShort = 'Le mot de passe doit contenir au moins 6 caracteres';
   static const String passwordsNotMatch = 'Les mots de passe ne correspondent pas';
+  static const String requiredConfirmPassword = 'La confirmation est requise';
+
 
   // ============== Alias pour compatibilite ==============
 

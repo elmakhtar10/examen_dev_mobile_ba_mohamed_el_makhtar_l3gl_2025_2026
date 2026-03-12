@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/User.dart';
 
 /**
  * Pattern Singleton:
@@ -40,6 +44,9 @@ class StorageService {
 
   // ======== Cles de Stockage =========
   static const String _keyOnboardingConmplete = 'onboarding_complete';
+  static const String _keyUsers = 'users_list';
+  static const String _keyCurrentUser = 'current_user';
+
 
 
   bool get isOnboardingComplete {
@@ -48,6 +55,51 @@ class StorageService {
 
   Future<void> setOnboardingComplete(bool value) async {
     await _prefs.setBool(_keyOnboardingConmplete, value);
+  }
+
+  List<User> getUsers() {
+
+    String? jsonString = _prefs.getString(_keyUsers);
+
+    if (jsonString == null) {
+      return [];
+    }
+
+    List<dynamic> jsonList = json.decode(jsonString);
+
+    return jsonList.map((item) => User.fromMap(item)).toList();
+  }
+
+  Future<void> saveAuthenticatedUser(User user) async {
+    String jsonString = json.encode(user.toMap());
+    await _prefs.setString(_keyCurrentUser, jsonString);
+  }
+
+  User? getAuthenticatedUser() {
+    String? userJson = _prefs.getString(_keyCurrentUser);
+
+    if (userJson == null) {
+      return null;
+    }
+
+    return User.fromMap(json.decode(userJson));
+
+  }
+
+  Future<void> saveUser(User user) async {
+
+    List<User> users = getUsers();
+
+    users.add(user);
+
+    String jsonString = json.encode(users.map((u) => u.toMap()).toList());
+
+    await _prefs.setString(_keyUsers, jsonString);
+  }
+
+  // Supprime l'utilisateur connecter
+  Future<void> clearAuthenticatedUser() async {
+    await _prefs.remove(_keyCurrentUser);
   }
 
 }
