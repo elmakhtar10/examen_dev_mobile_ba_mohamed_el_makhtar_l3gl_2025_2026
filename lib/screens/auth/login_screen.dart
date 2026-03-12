@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_colors.dart';
 import 'package:sunu_task/core/constants/app_strings.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/common/custom_button.dart';
 import '../../widgets/common/custom_text_field.dart';
 import '../home/home_screen.dart';
@@ -28,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final authProvider = context.watch<AuthProvider>();
+    final authProvider = context.watch<AuthProvider>();
 
     return Scaffold(
       appBar: AppBar(title: Text(AppStrings.login)),
@@ -80,16 +81,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
 
-                // Visibility(
-                //   visible: authProvider.error != null,
-                //   child: Padding(
-                //     padding: const EdgeInsets.only(top: 16),
-                //     child: Text(
-                //       authProvider.error ?? '',
-                //       style: TextStyle(color: AppColors.error),
-                //     ),
-                //   ),
-                // ),
+                Visibility(
+                  visible: authProvider.error != null,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(
+                      authProvider.error ?? '',
+                      style: TextStyle(color: AppColors.error),
+                    ),
+                  ),
+                ),
 
                 const SizedBox(height: 24),
 
@@ -99,17 +100,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   // isLoading: authProvider.isLoading,
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      // bool success = await context.read<AuthProvider>().login(
-                      //   _emailController.text,
-                      //   _passwordController.text,
-                      // );
+                      bool success = await context.read<AuthProvider>().login(
+                        _emailController.text,
+                        _passwordController.text,
+                      );
 
-                      // if (success && mounted) {
-                      //   Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(builder: (context) => const HomeScreen()),
-                      //   );
-                      // }
+                      if (success && mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const HomeScreen()),
+                        );
+                      }
                     }
                   },
                 ),
