@@ -20,13 +20,15 @@ class Project {
   // --- Sérialisation JSON ---
 
   /// Convertit un objet Project en Map (pour SharedPreferences)
+  // --- Sérialisation JSON ---
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'userId': userId,
       'title': title,
       'description': description,
-      'createdAt': createdAt,
+      'createdAt': createdAt.toIso8601String(),
       'isCompleted': isCompleted,
     };
   }
