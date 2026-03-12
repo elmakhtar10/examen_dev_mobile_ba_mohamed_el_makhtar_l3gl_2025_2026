@@ -5,6 +5,7 @@ import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/providers/auth_provider.dart';
 import 'package:sunu_task/screens/auth/login_screen.dart';
 import 'package:sunu_task/screens/home/tabs/dashboard_tab.dart';
+import 'package:sunu_task/screens/home/tabs/profile_tab.dart';
 import 'package:sunu_task/screens/home/tabs/projects_tab.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -68,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // 2. CORPS AVEC INDEXEDSTACK (Préserve l'état)
+      // CORPS AVEC INDEXEDSTACK (Préserve l'état)
       body: IndexedStack(
         index: _currentIndex,
         children:  [
@@ -77,11 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
           // Center(child: Text('Contenu Dashboard')),
           // Center(child: Text('Contenu Projets')),
           Center(child: Text('Contenu Tâches')),
-          Center(child: Text('Contenu Profil')),
+          ProfileTab(),
         ],
       ),
 
-      // 3. FLOATING ACTION BUTTON (Visible seulement sur dashboard et projets)
+      // FLOATING ACTION BUTTON (Visible seulement sur dashboard et projets)
       floatingActionButton: (_currentIndex == 0 || _currentIndex == 1)
           ? FloatingActionButton(
         onPressed: () {
@@ -92,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
       )
           : null,
 
-      // 4. BOTTOM NAVIGATION BAR
+      // BOTTOM NAVIGATION BAR
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
