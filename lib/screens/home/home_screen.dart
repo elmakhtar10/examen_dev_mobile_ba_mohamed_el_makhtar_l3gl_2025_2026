@@ -5,6 +5,7 @@ import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/providers/auth_provider.dart';
 import 'package:sunu_task/screens/auth/login_screen.dart';
 import 'package:sunu_task/screens/home/tabs/dashboard_tab.dart';
+import 'package:sunu_task/screens/home/tabs/projects_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,8 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _currentIndex,
         children:  [
           DashboardTab(),
+          ProjectsTab(),
           // Center(child: Text('Contenu Dashboard')),
-          Center(child: Text('Contenu Projets')),
+          // Center(child: Text('Contenu Projets')),
           Center(child: Text('Contenu Tâches')),
           Center(child: Text('Contenu Profil')),
         ],
