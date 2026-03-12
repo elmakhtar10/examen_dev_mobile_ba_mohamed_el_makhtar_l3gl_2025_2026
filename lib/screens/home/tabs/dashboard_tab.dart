@@ -99,7 +99,7 @@ class DashboardTab extends StatelessWidget {
       childAspectRatio: 1.5,
       children: [
         _buildStatCard("Projets", "$totalProjects", Icons.folder, Colors.blue),
-        _buildStatCard("À faire", "0", Icons.assignment, Colors.orange), // Sera lié aux tâches
+        _buildStatCard("À faire", "0", Icons.assignment, Colors.orange),
         _buildStatCard("En cours", "$inProgress", Icons.pending, Colors.purple),
         _buildStatCard("Terminés", "$completedProjects", Icons.check_circle, Colors.green),
       ],
