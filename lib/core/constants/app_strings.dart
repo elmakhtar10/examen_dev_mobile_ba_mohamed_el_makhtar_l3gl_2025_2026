@@ -78,7 +78,7 @@ class AppStrings {
 
   // ============== Taches ==============
 
-  static const String tasks = 'Taches';
+  static const String tasks = 'Tâches';
   static const String task = 'Tache';
   static const String newTask = 'Nouvelle tache';
   static const String editTask = 'Modifier la tache';
@@ -109,6 +109,7 @@ class AppStrings {
   static const String home = 'Accueil';
   static const String settings = 'Parametres';
   static const String profile = 'Profil';
+  static const String dashboard = 'Dashboard';
 
   // ============== Messages ==============
 
