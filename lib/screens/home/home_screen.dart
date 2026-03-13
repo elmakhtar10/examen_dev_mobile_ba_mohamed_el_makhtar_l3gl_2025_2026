@@ -23,10 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // Liste des titres pour l'AppBar selon l'onglet
   final List<String> _titles = [
-    'Tableau de Bord',
-    'Mes Projets',
-    'Mes Tâches',
-    'Mon Profil',
+    AppStrings.homeTitleDashboard,
+    AppStrings.homeTitleProjects,
+    AppStrings.homeTitleTasks,
+    AppStrings.homeTitleProfile,
   ];
 
   @override
@@ -64,22 +64,22 @@ class _HomeScreenState extends State<HomeScreen> {
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Text(
-                  user?.name[0].toUpperCase() ?? "U",
+                  user?.name[0].toUpperCase() ?? AppStrings.profileDefaultInitial,
                   style: TextStyle(fontSize: 24, color: AppColors.primary),
                 ),
               ),
-              accountName: Text(user?.name ?? "Utilisateur"),
-              accountEmail: Text(user?.email ?? "email@sunutask.sn"),
+              accountName: Text(user?.name ?? AppStrings.profileDefaultUser),
+              accountEmail: Text(user?.email ?? AppStrings.defaultAccountEmail),
             ),
-            _buildDrawerItem(Icons.dashboard, 'Dashboard', 0),
-            _buildDrawerItem(Icons.folder, 'Projets', 1),
-            _buildDrawerItem(Icons.list, 'Tâches', 2),
-            _buildDrawerItem(Icons.person, 'Profil', 3),
+            _buildDrawerItem(Icons.dashboard, AppStrings.drawerDashboard, 0),
+            _buildDrawerItem(Icons.folder, AppStrings.drawerProjects, 1),
+            _buildDrawerItem(Icons.list, AppStrings.drawerTasks, 2),
+            _buildDrawerItem(Icons.person, AppStrings.drawerProfile, 3),
             Spacer(),
             Divider(),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.red),
-              title: Text('Déconnexion', style: TextStyle(color: Colors.red)),
+              title: Text(AppStrings.logout, style: TextStyle(color: Colors.red)),
               onTap: () => _handleLogout(context),
             ),
           ],
@@ -153,3 +153,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
+
+
+
+
+

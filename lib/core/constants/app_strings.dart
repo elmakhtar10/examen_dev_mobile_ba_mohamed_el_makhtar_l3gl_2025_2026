@@ -125,6 +125,15 @@ class AppStrings {
   static const String settings = 'Parametres';
   static const String profile = 'Profil';
   static const String dashboard = 'Dashboard';
+  static const String homeTitleDashboard = 'Tableau de Bord';
+  static const String homeTitleProjects = 'Mes Projets';
+  static const String homeTitleTasks = 'Mes Taches';
+  static const String homeTitleProfile = 'Mon Profil';
+  static const String drawerDashboard = 'Dashboard';
+  static const String drawerProjects = 'Projets';
+  static const String drawerTasks = 'Taches';
+  static const String drawerProfile = 'Profil';
+  static const String defaultAccountEmail = 'email@sunutask.sn';
   static const String profileDefaultUser = 'Utilisateur';
   static const String profileDefaultEmail = 'email@exemple.com';
   static const String profileDefaultInitial = 'U';
