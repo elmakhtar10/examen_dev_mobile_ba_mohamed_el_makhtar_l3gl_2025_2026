@@ -118,6 +118,19 @@ class AppStrings {
   static const String errorOccurred = 'Une erreur est survenue';
   static const String success = 'Operation reussie';
   static const String confirmDelete = 'Etes-vous sur de vouloir supprimer ?';
+  static const String greetingMorning = 'Bonjour';
+  static const String greetingAfternoon = 'Bon apres-midi';
+  static const String greetingEvening = 'Bonsoir';
+  static const String greetingSuffix = '!';
+  static const String dashboardSubtitle = 'Voici un apercu de vos activites.';
+  static const String recentProjects = 'Projets recents';
+  static const String seeAll = 'Voir tout';
+  static const String noRecentProjects = 'Aucun projet recent';
+  static const String statProjects = 'Projets';
+  static const String statTodo = 'A faire';
+  static const String statInProgress = 'En cours';
+  static const String statDone = 'Termines';
+  static const String friendFallback = "l'ami";
 
   // ============== Validation ==============
 
