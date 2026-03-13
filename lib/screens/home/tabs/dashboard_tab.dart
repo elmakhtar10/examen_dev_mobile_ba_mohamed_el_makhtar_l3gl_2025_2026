@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_colors.dart';
-import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/providers/app_provider.dart';
 import 'package:sunu_task/providers/project_provider.dart';
 import 'package:sunu_task/providers/auth_provider.dart';
-import 'package:sunu_task/providers/task_provider.dart';
 
 class DashboardTab extends StatelessWidget {
   const DashboardTab({super.key});
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return AppStrings.greetingMorning;
-    if (hour < 18) return AppStrings.greetingAfternoon;
-    return AppStrings.greetingEvening;
+    if (hour < 12) return "Bonjour";
+    if (hour < 18) return "Bon après-midi";
+    return "Bonsoir";
   }
 
   @override
@@ -22,7 +20,6 @@ class DashboardTab extends StatelessWidget {
     // On écoute les trois providers nécessaires
     final appProvider = context.watch<AppProvider>();
     final projectProvider = context.watch<ProjectProvider>();
-    final taskProvider = context.watch<TaskProvider>();
     final authProvider = context.read<AuthProvider>();
 
     return RefreshIndicator(
@@ -30,21 +27,20 @@ class DashboardTab extends StatelessWidget {
         await appProvider.init();
         if (authProvider.currentUser != null) {
           await projectProvider.loadProjects(authProvider.currentUser!.id);
-          await taskProvider.loadTasks(authProvider.currentUser!.id);
         }
       },
       color: AppColors.primary,
       child: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          _buildHeader(authProvider.currentUser?.name ?? AppStrings.friendFallback),
+          _buildHeader(authProvider.currentUser?.name ?? "l'ami"),
 
           const SizedBox(height: 24),
 
           // Section Statistiques avec les VRAIES données
-          appProvider.isLoading || projectProvider.isLoading || taskProvider.isLoading
+          appProvider.isLoading || projectProvider.isLoading
               ? const Center(child: LinearProgressIndicator())
-              : _buildStatsGrid(projectProvider, taskProvider),
+              : _buildStatsGrid(projectProvider),
 
           const SizedBox(height: 24),
 
@@ -54,11 +50,11 @@ class DashboardTab extends StatelessWidget {
           if (projectProvider.projects.isEmpty)
             const Padding(
               padding: EdgeInsets.all(20.0),
-              child: Text(AppStrings.noRecentProjects, textAlign: TextAlign.center),
+              child: Text("Aucun projet récent", textAlign: TextAlign.center),
             )
           else
             ...projectProvider.projects.reversed.take(3).map((project) {
-              return _buildRecentProjectItem(project.title, AppStrings.project);
+              return _buildRecentProjectItem(project.title, "Projet");
             }),
         ],
       ),
@@ -72,7 +68,7 @@ class DashboardTab extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "${_getGreeting()}, $name ${AppStrings.greetingSuffix}",
+          "${_getGreeting()}, $name !",
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -81,21 +77,18 @@ class DashboardTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         const Text(
-          AppStrings.dashboardSubtitle,
+          "Voici un aperçu de vos activités.",
           style: TextStyle(color: AppColors.textSecondary),
         ),
       ],
     );
   }
 
-  Widget _buildStatsGrid(ProjectProvider projectProvider, TaskProvider taskProvider) {
+  Widget _buildStatsGrid(ProjectProvider provider) {
     // Calcul des statistiques réelles
-    int totalProjects = projectProvider.projectCount;
-    int completedProjects = projectProvider.projects.where((p) => p.isCompleted).length;
+    int totalProjects = provider.projectCount;
+    int completedProjects = provider.projects.where((p) => p.isCompleted).length;
     int inProgress = totalProjects - completedProjects;
-
-    int completedTasks = taskProvider.tasks.where((t) => t.isCompleted).length;
-    int todoTasks = taskProvider.taskCount - completedTasks;
 
     return GridView.count(
       shrinkWrap: true,
@@ -105,10 +98,10 @@ class DashboardTab extends StatelessWidget {
       mainAxisSpacing: 12,
       childAspectRatio: 1.5,
       children: [
-        _buildStatCard(AppStrings.statProjects, "$totalProjects", Icons.folder, Colors.blue),
-        _buildStatCard(AppStrings.statTodo, "$todoTasks", Icons.assignment, Colors.orange),
-        _buildStatCard(AppStrings.statInProgress, "$inProgress", Icons.pending, Colors.purple),
-        _buildStatCard(AppStrings.statDone, "$completedTasks", Icons.check_circle, Colors.green),
+        _buildStatCard("Projets", "$totalProjects", Icons.folder, Colors.blue),
+        _buildStatCard("À faire", "0", Icons.assignment, Colors.orange), // Sera lié aux tâches
+        _buildStatCard("En cours", "$inProgress", Icons.pending, Colors.purple),
+        _buildStatCard("Terminés", "$completedProjects", Icons.check_circle, Colors.green),
       ],
     );
   }
@@ -137,10 +130,10 @@ class DashboardTab extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          AppStrings.recentProjects,
+          "Projets récents",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        TextButton(onPressed: null, child: Text(AppStrings.seeAll)),
+        TextButton(onPressed: null, child: Text("Voir tout")),
       ],
     );
   }

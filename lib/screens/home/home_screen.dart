@@ -3,10 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_colors.dart';
 import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/providers/auth_provider.dart';
+import 'package:sunu_task/providers/project_provider.dart';
+import 'package:sunu_task/providers/task_provider.dart';
 import 'package:sunu_task/screens/auth/login_screen.dart';
 import 'package:sunu_task/screens/home/tabs/dashboard_tab.dart';
 import 'package:sunu_task/screens/home/tabs/profile_tab.dart';
 import 'package:sunu_task/screens/home/tabs/projects_tab.dart';
+import 'package:sunu_task/screens/home/tabs/tasks_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,6 +28,20 @@ class _HomeScreenState extends State<HomeScreen> {
     'Mes Tâches',
     'Mon Profil',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final auth = context.read<AuthProvider>();
+      final projectProvider = context.read<ProjectProvider>();
+      final taskProvider = context.read<TaskProvider>();
+      if (auth.currentUser != null) {
+        await projectProvider.loadProjects(auth.currentUser!.id);
+        await taskProvider.loadTasks(auth.currentUser!.id);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,9 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children:  [
           DashboardTab(),
           ProjectsTab(),
-          // Center(child: Text('Contenu Dashboard')),
-          // Center(child: Text('Contenu Projets')),
-          Center(child: Text('Contenu Tâches')),
+          TasksTab(),
           ProfileTab(),
         ],
       ),
@@ -85,12 +100,16 @@ class _HomeScreenState extends State<HomeScreen> {
       // FLOATING ACTION BUTTON (Visible seulement sur dashboard et projets)
       floatingActionButton: (_currentIndex == 0 || _currentIndex == 1)
           ? FloatingActionButton(
-        onPressed: () {
-          // Action pour nouveau projet
-        },
-        backgroundColor: AppColors.primary,
-        child:  Icon(Icons.add, color: Colors.white),
-      )
+              onPressed: () {
+                if (_currentIndex == 1) {
+                  showCreateProjectDialog(context);
+                  return;
+                }
+                // TODO: action spécifique Dashboard si besoin
+              },
+              backgroundColor: AppColors.primary,
+              child: Icon(Icons.add, color: Colors.white),
+            )
           : null,
 
       // BOTTOM NAVIGATION BAR

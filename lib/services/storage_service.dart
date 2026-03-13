@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/Project.dart';
+import '../models/Task.dart';
 import '../models/User.dart';
 
 /**
@@ -48,6 +49,7 @@ class StorageService {
   static const String _keyUsers = 'users_list';
   static const String _keyCurrentUser = 'current_user';
   static const String _keyProjects = 'projects_list';
+  static const String _keyTasks = 'tasks_list';
 
 
 
@@ -138,6 +140,38 @@ class StorageService {
 
     String jsonString = json.encode(projects.map((p) => p.toMap()).toList());
     await _prefs.setString(_keyProjects, jsonString);
+  }
+
+  // --- Gestion des Taches ---
+
+  List<Task> getTasks() {
+    String? jsonString = _prefs.getString(_keyTasks);
+    if (jsonString == null) return [];
+
+    List<dynamic> jsonList = json.decode(jsonString);
+    return jsonList.map((item) => Task.fromMap(item)).toList();
+  }
+
+  Future<void> saveTask(Task task) async {
+    List<Task> tasks = getTasks();
+
+    int index = tasks.indexWhere((t) => t.id == task.id);
+    if (index != -1) {
+      tasks[index] = task;
+    } else {
+      tasks.add(task);
+    }
+
+    String jsonString = json.encode(tasks.map((t) => t.toMap()).toList());
+    await _prefs.setString(_keyTasks, jsonString);
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    List<Task> tasks = getTasks();
+    tasks.removeWhere((t) => t.id == taskId);
+
+    String jsonString = json.encode(tasks.map((t) => t.toMap()).toList());
+    await _prefs.setString(_keyTasks, jsonString);
   }
 
 }

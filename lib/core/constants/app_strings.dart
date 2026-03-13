@@ -43,6 +43,7 @@ class AppStrings {
   static const String delete = 'Supprimer';
   static const String edit = 'Modifier';
   static const String add = 'Ajouter';
+  static const String create = 'Creer';
   static const String search = 'Rechercher';
   static const String filter = 'Filtrer';
   static const String retry = 'Reessayer';
@@ -72,6 +73,14 @@ class AppStrings {
   static const String deleteProject = 'Supprimer le projet';
   static const String projectName = 'Nom du projet';
   static const String projectDescription = 'Description';
+  static const String projectTitleLabel = 'Titre du projet';
+  static const String projectDescriptionOptional = 'Description (Optionnel)';
+  static const String projectTitleHint = 'Ex: Developpement Mobile';
+  static const String projectDescriptionHint = 'Ex: Projet de fin de cycle';
+  static const String emptyProjectsTitle = 'Votre liste est vide';
+  static const String emptyProjectsSubtitle = 'Appuyez sur le bouton + pour commencer.';
+  static const String confirmDeleteProjectPrefix = 'Voulez-vous supprimer';
+  static const String confirmDeleteProjectSuffix = 'Cette action est definitive.';
   static const String projectColor = 'Couleur';
   static const String noProjects = 'Aucun projet';
   static const String noProjectsDesc = 'Creez votre premier projet pour commencer';
@@ -85,12 +94,18 @@ class AppStrings {
   static const String deleteTask = 'Supprimer la tache';
   static const String taskTitle = 'Titre';
   static const String taskDescription = 'Description';
+  static const String taskTitleLabel = 'Titre de la tache';
+  static const String taskDescriptionOptional = 'Description (Optionnel)';
+  static const String taskTitleHint = 'Ex: Devoir Flutter';
+  static const String taskDescriptionHint = 'Ex: Terminer avant vendredi';
   static const String taskStatus = 'Statut';
   static const String taskPriority = 'Priorite';
   static const String taskDueDate = 'Date limite';
   static const String taskAssignee = 'Assigne a';
   static const String noTasks = 'Aucune tache';
   static const String noTasksDesc = 'Ajoutez votre premiere tache';
+  static const String confirmDeleteTaskPrefix = 'Voulez-vous supprimer';
+  static const String confirmDeleteTaskSuffix = 'Cette action est definitive.';
 
   // ============== Statuts ==============
 
@@ -110,6 +125,25 @@ class AppStrings {
   static const String settings = 'Parametres';
   static const String profile = 'Profil';
   static const String dashboard = 'Dashboard';
+  static const String profileDefaultUser = 'Utilisateur';
+  static const String profileDefaultEmail = 'email@exemple.com';
+  static const String profileDefaultInitial = 'U';
+  static const String profileMemberSincePrefix = 'Inscrit depuis le';
+  static const String profileUnknownDate = 'Date inconnue';
+  static const List<String> monthsFr = [
+    'Janvier',
+    'Fevrier',
+    'Mars',
+    'Avril',
+    'Mai',
+    'Juin',
+    'Juillet',
+    'Aout',
+    'Septembre',
+    'Octobre',
+    'Novembre',
+    'Decembre',
+  ];
 
   // ============== Messages ==============
 

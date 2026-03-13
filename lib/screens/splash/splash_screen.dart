@@ -69,6 +69,8 @@ class _SplashScreenState extends State<SplashScreen> {
       await appProvider.init();
     }
 
+    await authProvider.init();
+
     final bool onboardingComplete = appProvider.isOnboardingComplete;
     final bool isAuthenticated = authProvider.isAuthenticated;
 
