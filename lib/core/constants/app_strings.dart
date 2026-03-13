@@ -14,7 +14,7 @@ class AppStrings {
   static const String appName = 'SunuTask';
   static const String appSlogan = 'Gérez vos projets efficacement';
 
- // ============== Onboarding ==============
+  // ============== Onboarding ==============
 
   static const String onboardingTitle1 = 'Bienvenue sur $appName';
   static const String onboardingDesc1 =
@@ -43,6 +43,7 @@ class AppStrings {
   static const String delete = 'Supprimer';
   static const String edit = 'Modifier';
   static const String add = 'Ajouter';
+  static const String create = 'Creer';
   static const String search = 'Rechercher';
   static const String filter = 'Filtrer';
   static const String retry = 'Reessayer';
@@ -56,10 +57,12 @@ class AppStrings {
   static const String email = 'Email';
   static const String password = 'Mot de passe';
   static const String confirmPassword = 'Confirmer le mot de passe';
-  static const String name = 'Nom';
+  static const String name = 'Nom Complet';
   static const String forgotPassword = 'Mot de passe oublie ?';
-  static const String noAccount = 'Pas encore de compte ?';
-  static const String haveAccount = 'Deja un compte ?';
+  static const String noAccount = 'Pas de compte? S\'inscrire';
+  static const String haveAccount = 'Déjà un compte ? Se connecter';
+  static const String invalidInput = 'Email ou mot de passe incorrect';
+  static const String createAccount = 'Créer un compte';
 
   // ============== Projets ==============
 
@@ -70,25 +73,39 @@ class AppStrings {
   static const String deleteProject = 'Supprimer le projet';
   static const String projectName = 'Nom du projet';
   static const String projectDescription = 'Description';
+  static const String projectTitleLabel = 'Titre du projet';
+  static const String projectDescriptionOptional = 'Description (Optionnel)';
+  static const String projectTitleHint = 'Ex: Developpement Mobile';
+  static const String projectDescriptionHint = 'Ex: Projet de fin de cycle';
+  static const String emptyProjectsTitle = 'Votre liste est vide';
+  static const String emptyProjectsSubtitle = 'Appuyez sur le bouton + pour commencer.';
+  static const String confirmDeleteProjectPrefix = 'Voulez-vous supprimer';
+  static const String confirmDeleteProjectSuffix = 'Cette action est definitive.';
   static const String projectColor = 'Couleur';
   static const String noProjects = 'Aucun projet';
   static const String noProjectsDesc = 'Creez votre premier projet pour commencer';
 
   // ============== Taches ==============
 
-  static const String tasks = 'Taches';
+  static const String tasks = 'Tâches';
   static const String task = 'Tache';
   static const String newTask = 'Nouvelle tache';
   static const String editTask = 'Modifier la tache';
   static const String deleteTask = 'Supprimer la tache';
   static const String taskTitle = 'Titre';
   static const String taskDescription = 'Description';
+  static const String taskTitleLabel = 'Titre de la tache';
+  static const String taskDescriptionOptional = 'Description (Optionnel)';
+  static const String taskTitleHint = 'Ex: Devoir Flutter';
+  static const String taskDescriptionHint = 'Ex: Terminer avant vendredi';
   static const String taskStatus = 'Statut';
   static const String taskPriority = 'Priorite';
   static const String taskDueDate = 'Date limite';
   static const String taskAssignee = 'Assigne a';
   static const String noTasks = 'Aucune tache';
   static const String noTasksDesc = 'Ajoutez votre premiere tache';
+  static const String confirmDeleteTaskPrefix = 'Voulez-vous supprimer';
+  static const String confirmDeleteTaskSuffix = 'Cette action est definitive.';
 
   // ============== Statuts ==============
 
@@ -107,6 +124,35 @@ class AppStrings {
   static const String home = 'Accueil';
   static const String settings = 'Parametres';
   static const String profile = 'Profil';
+  static const String dashboard = 'Dashboard';
+  static const String homeTitleDashboard = 'Tableau de Bord';
+  static const String homeTitleProjects = 'Mes Projets';
+  static const String homeTitleTasks = 'Mes Taches';
+  static const String homeTitleProfile = 'Mon Profil';
+  static const String drawerDashboard = 'Dashboard';
+  static const String drawerProjects = 'Projets';
+  static const String drawerTasks = 'Taches';
+  static const String drawerProfile = 'Profil';
+  static const String defaultAccountEmail = 'email@sunutask.sn';
+  static const String profileDefaultUser = 'Utilisateur';
+  static const String profileDefaultEmail = 'email@exemple.com';
+  static const String profileDefaultInitial = 'U';
+  static const String profileMemberSincePrefix = 'Inscrit depuis le';
+  static const String profileUnknownDate = 'Date inconnue';
+  static const List<String> monthsFr = [
+    'Janvier',
+    'Fevrier',
+    'Mars',
+    'Avril',
+    'Mai',
+    'Juin',
+    'Juillet',
+    'Aout',
+    'Septembre',
+    'Octobre',
+    'Novembre',
+    'Decembre',
+  ];
 
   // ============== Messages ==============
 
@@ -115,6 +161,19 @@ class AppStrings {
   static const String errorOccurred = 'Une erreur est survenue';
   static const String success = 'Operation reussie';
   static const String confirmDelete = 'Etes-vous sur de vouloir supprimer ?';
+  static const String greetingMorning = 'Bonjour';
+  static const String greetingAfternoon = 'Bon apres-midi';
+  static const String greetingEvening = 'Bonsoir';
+  static const String greetingSuffix = '!';
+  static const String dashboardSubtitle = 'Voici un apercu de vos activites.';
+  static const String recentProjects = 'Projets recents';
+  static const String seeAll = 'Voir tout';
+  static const String noRecentProjects = 'Aucun projet recent';
+  static const String statProjects = 'Projets';
+  static const String statTodo = 'A faire';
+  static const String statInProgress = 'En cours';
+  static const String statDone = 'Termines';
+  static const String friendFallback = "l'ami";
 
   // ============== Validation ==============
 
@@ -126,6 +185,8 @@ class AppStrings {
   static const String emailInvalid = 'Email invalide';
   static const String passwordTooShort = 'Le mot de passe doit contenir au moins 6 caracteres';
   static const String passwordsNotMatch = 'Les mots de passe ne correspondent pas';
+  static const String requiredConfirmPassword = 'La confirmation est requise';
+
 
   // ============== Alias pour compatibilite ==============
 

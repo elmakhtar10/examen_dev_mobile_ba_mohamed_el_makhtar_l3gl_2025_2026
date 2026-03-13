@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_colors.dart';
 import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/models/OnboardingItem.dart';
+import 'package:sunu_task/screens/auth/login_screen.dart';
 import 'package:sunu_task/screens/home/home_screen.dart';
 import 'package:sunu_task/services/storage_service.dart';
+
+import '../../providers/app_provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -62,12 +66,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _completeOnboarding() async{
-    await StorageService.instance.setOnboardingComplete(true);
-    
+    await context.read<AppProvider>().completeOnboarding();
     if(mounted){
       Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const HomeScreen())
+          MaterialPageRoute(builder: (_) => const LoginScreen())
       );
     }
   }

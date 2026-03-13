@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/screens/home/home_screen.dart';
 import 'package:sunu_task/screens/onboarding/onboarding_screen.dart';
 import 'package:sunu_task/services/storage_service.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../providers/app_provider.dart';
+import '../../providers/auth_provider.dart';
+import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -55,36 +59,50 @@ class _SplashScreenState extends State<SplashScreen> {
     _timer = Timer( Duration(seconds: 3), _navigateToNextScreen);
   }
 
-  void _navigateToNextScreen() {
-    if(!mounted) return;
-    final bool onboardingComplete = StorageService.instance.isOnboardingComplete;
+  void _navigateToNextScreen() async {
+    if (!mounted) return;
 
-    /*Navigator.pushReplacement(context,
-      MaterialPageRoute<void>(
-      builder: (context) => onboardingComplete
-          ? const HomeScreen()
-          : const OnboardingScreen(),
-    ),
-    );*/
+    final appProvider = context.read<AppProvider>();
+    final authProvider = context.read<AuthProvider>();
+    // Cela évite de naviguer alors que les données sont encore à 'false' par défaut
+    if (!appProvider.isInitialized) {
+      await appProvider.init();
+    }
+
+    await authProvider.init();
+
+    final bool onboardingComplete = appProvider.isOnboardingComplete;
+    final bool isAuthenticated = authProvider.isAuthenticated;
+
+    // Déterminer la destination
+    Widget nextScreen;
+
+    if (!onboardingComplete) {
+      nextScreen = const OnboardingScreen();
+    } else if (!isAuthenticated) {
+      nextScreen = const LoginScreen();
+    } else {
+      nextScreen = const HomeScreen();
+    }
 
     // Navigation avec animation
-    Navigator.pushReplacement(
+    if (mounted) {
+      Navigator.pushReplacement(
         context,
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-          onboardingComplete
-              ? const HomeScreen()
-              : const OnboardingScreen(),
+          pageBuilder: (context, animation, secondaryAnimation) => nextScreen,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
-                opacity: animation,
+              opacity: animation,
               child: child,
             );
           },
-          transitionDuration: Duration(milliseconds: 300)
-        )
-    );
+          transitionDuration: const Duration(milliseconds: 300),
+        ),
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,15 +141,15 @@ class _SplashScreenState extends State<SplashScreen> {
           width: 124,
           height: 124,
           decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withAlpha(180),
-                blurRadius: 20,
-                offset: Offset(0, 10)
-              )
-            ]
+              color: AppColors.primary,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                    color: AppColors.primary.withAlpha(180),
+                    blurRadius: 20,
+                    offset: Offset(0, 10)
+                )
+              ]
             //shape: BoxShape.circle
           ),
           child: Icon(
@@ -154,7 +172,7 @@ class _SplashScreenState extends State<SplashScreen> {
             fontSize: 32,
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
-          letterSpacing: 1.2
+            letterSpacing: 1.2
         ),
       ),
     );
