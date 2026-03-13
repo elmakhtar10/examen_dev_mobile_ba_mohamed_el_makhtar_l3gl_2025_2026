@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sunu_task/core/constants/app_colors.dart';
+import 'package:sunu_task/core/constants/app_strings.dart';
 import 'package:sunu_task/providers/auth_provider.dart';
 import 'package:sunu_task/providers/project_provider.dart';
+import 'package:sunu_task/providers/task_provider.dart';
 import 'package:sunu_task/screens/auth/login_screen.dart';
 
 class ProfileTab extends StatelessWidget {
@@ -10,21 +12,16 @@ class ProfileTab extends StatelessWidget {
 
   // Fonction pour transformer une date en "12 Mars 2026"
   String _formatDate(DateTime? date) {
-    if (date == null) return "Date inconnue";
+    if (date == null) return AppStrings.profileUnknownDate;
 
-    // Liste des mois en français
-    const months = [
-      'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-      'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
-    ];
-
-    return "${date.day} ${months[date.month - 1]} ${date.year}";
+    return "${date.day} ${AppStrings.monthsFr[date.month - 1]} ${date.year}";
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = context.read<AuthProvider>();
     final projectProvider = context.watch<ProjectProvider>();
+    final taskProvider = context.watch<TaskProvider>();
     final user = authProvider.currentUser;
 
     return SingleChildScrollView(
@@ -38,7 +35,9 @@ class ProfileTab extends StatelessWidget {
             radius: 50,
             backgroundColor: AppColors.primary,
             child: Text(
-              user?.name.isNotEmpty == true ? user!.name.substring(0, 1).toUpperCase() : "U",
+              user?.name.isNotEmpty == true
+                  ? user!.name.substring(0, 1).toUpperCase()
+                  : AppStrings.profileDefaultInitial,
               style: const TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -47,11 +46,11 @@ class ProfileTab extends StatelessWidget {
 
           // NOM ET EMAIL
           Text(
-            user?.name ?? "Utilisateur",
+            user?.name ?? AppStrings.profileDefaultUser,
             style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           Text(
-            user?.email ?? "email@exemple.com",
+            user?.email ?? AppStrings.profileDefaultEmail,
             style: const TextStyle(color: Colors.grey),
           ),
 
@@ -60,7 +59,7 @@ class ProfileTab extends StatelessWidget {
           // DATE D'INSCRIPTION
           Chip(
             label: Text(
-              "Inscrit depuis le ${_formatDate(user?.createdAt ?? DateTime.now())}",
+              "${AppStrings.profileMemberSincePrefix} ${_formatDate(user?.createdAt ?? DateTime.now())}",
               style: const TextStyle(fontWeight: FontWeight.w500),
             ),
             backgroundColor: AppColors.primary.withAlpha(30),
@@ -73,8 +72,8 @@ class ProfileTab extends StatelessWidget {
           // 4. STATISTIQUES RÉELLES
           Row(
             children: [
-              _buildStatItem("Projets", "${projectProvider.projectCount}", Icons.folder_shared),
-              _buildStatItem("Tâches", "0", Icons.check_circle_outline),
+              _buildStatItem(AppStrings.projects, "${projectProvider.projectCount}", Icons.folder_shared),
+              _buildStatItem(AppStrings.tasks, "${taskProvider.taskCount}", Icons.check_circle_outline),
             ],
           ),
 
@@ -95,7 +94,7 @@ class ProfileTab extends StatelessWidget {
                 }
               },
               icon: const Icon(Icons.logout, color: Colors.white),
-              label: const Text("Déconnexion", style: TextStyle(color: Colors.white)),
+              label: const Text(AppStrings.logout, style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.redAccent,
                 padding: const EdgeInsets.symmetric(vertical: 15),
@@ -128,3 +127,5 @@ class ProfileTab extends StatelessWidget {
     );
   }
 }
+
+

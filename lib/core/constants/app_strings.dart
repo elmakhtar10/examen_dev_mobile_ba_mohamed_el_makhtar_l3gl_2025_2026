@@ -125,6 +125,25 @@ class AppStrings {
   static const String settings = 'Parametres';
   static const String profile = 'Profil';
   static const String dashboard = 'Dashboard';
+  static const String profileDefaultUser = 'Utilisateur';
+  static const String profileDefaultEmail = 'email@exemple.com';
+  static const String profileDefaultInitial = 'U';
+  static const String profileMemberSincePrefix = 'Inscrit depuis le';
+  static const String profileUnknownDate = 'Date inconnue';
+  static const List<String> monthsFr = [
+    'Janvier',
+    'Fevrier',
+    'Mars',
+    'Avril',
+    'Mai',
+    'Juin',
+    'Juillet',
+    'Aout',
+    'Septembre',
+    'Octobre',
+    'Novembre',
+    'Decembre',
+  ];
 
   // ============== Messages ==============
 
